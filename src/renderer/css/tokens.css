@@ -107,6 +107,13 @@
   --fc-chart-5: #fbbf24; --fc-chart-6: #38bdf8; --fc-chart-7: #f472b6; --fc-chart-8: #a5b4fc;
   --fc-chart-hit: rgb(124 224 255 / 0.18);
 
+  /* Paleta Liquid Glass (Apple) */
+  --fc-accent-cyan: #7ce0ff;
+  --fc-accent-lavender: #c7a6ff;
+  --fc-accent-blue: #4a5bff;
+  --fc-glass-bg-base: #141a3a;
+  --fc-card-radius: 28px;
+
   /* Esqueletos translúcidos */
   --fc-skeleton: rgba(255, 255, 255, 0.08);
   --fc-skeleton-shine: rgba(255, 255, 255, 0.2);

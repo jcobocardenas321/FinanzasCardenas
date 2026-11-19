@@ -61,8 +61,9 @@ export function createShell({ routes, user, prefs, householdName, navigate, onLo
     app.dataset.mobile = String(mobile);
     app.dataset.drawer = drawerOpen ? 'open' : 'closed';
     sidebar.inert = mobile && !drawerOpen; // el cajón cerrado no debe poder enfocarse con Tab
-    backdrop.hidden = !drawerOpen;
+    backdrop.hidden = !drawerOpen || !mobile;
     hamburger.setAttribute('aria-expanded', String(drawerOpen));
+    hamburger.setAttribute('aria-label', drawerOpen ? 'Cerrar menú' : 'Abrir menú');
     collapseBtn.setAttribute('aria-expanded', String(!collapsed));
     collapseLabel.textContent = collapsed ? 'Expandir menú' : 'Contraer menú';
     pinBtn.setAttribute('aria-pressed', String(pinned));
@@ -79,6 +80,7 @@ export function createShell({ routes, user, prefs, householdName, navigate, onLo
 
   // ---------- Cajón móvil ----------
   function openDrawer() {
+    if (!mobileQuery.matches) return;
     drawerOpen = true;
     apply();
     releaseTrap = trapFocus(sidebar);
@@ -90,9 +92,13 @@ export function createShell({ routes, user, prefs, householdName, navigate, onLo
     releaseTrap?.();
     releaseTrap = null;
     apply();
-    if (returnFocus) hamburger.focus();
+    if (returnFocus && mobileQuery.matches) hamburger.focus();
   }
-  listen(hamburger, 'click', () => (drawerOpen ? closeDrawer() : openDrawer()));
+  listen(hamburger, 'click', () => {
+    if (!mobileQuery.matches) return;
+    if (drawerOpen) closeDrawer();
+    else openDrawer();
+  });
   listen(backdrop, 'click', () => closeDrawer());
   listen(sidebar, 'click', (event) => { if (event.target.closest('a.nav-link') && mobileQuery.matches) closeDrawer(false); });
   const onBreakpoint = () => { if (!mobileQuery.matches) closeDrawer(false); apply(); };
