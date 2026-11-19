@@ -1,0 +1,6 @@
+# [D.16] Normaliza finales de línea (el repo se edita en Windows y Linux)
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.woff2 binary
+*.exe binary

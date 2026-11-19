@@ -1,0 +1,26 @@
+# [D.16] Node / Electron
+node_modules/
+dist/
+out/
+*.log
+npm-debug.log*
+
+# Assets de terceros generados por `npm run vendor` (se copian desde node_modules)
+src/renderer/vendor/
+
+# Bases de datos locales y claves: NUNCA al repositorio
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+recovery-key*
+.env
+.env.*
+
+# Editor / SO
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+coverage/

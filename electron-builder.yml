@@ -1,0 +1,25 @@
+# [D.15] Ejecutable portable para Windows + AppImage para Linux.
+appId: com.finanzascardenas.app
+productName: FinanzasCardenas
+directories:
+  output: dist
+  buildResources: build
+asar: true
+# better-sqlite3 13.x trae binarios N-API precompilados (ver docs/DECISIONES.md, ADR-003):
+# no hay que recompilar contra Electron. Se desempaquetan porque un .node no se carga desde dentro del asar.
+npmRebuild: false
+asarUnpack:
+  - node_modules/better-sqlite3/prebuilds/**
+files:
+  - src/**
+  - package.json
+  - "!src/**/*.map"
+win:
+  target:
+    - target: portable
+      arch: [x64]
+  artifactName: "FinanzasCardenas-${version}-portable.exe"
+linux:
+  target: [AppImage]
+  category: Office
+  artifactName: "FinanzasCardenas-${version}.AppImage"
