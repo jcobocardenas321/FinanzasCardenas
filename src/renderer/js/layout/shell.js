@@ -27,7 +27,14 @@ export function createShell({ routes, user, prefs, householdName, navigate, onLo
   const userBtn = h('button', { type: 'button', id: 'user-menu-btn', class: 'user-btn', 'aria-haspopup': 'menu', 'aria-expanded': 'false', 'aria-controls': 'user-menu' },
     icon('circle-user'), h('span', { class: 'user-btn__name' }, user.displayName), icon('chevron-down', 'user-btn__chevron'));
   const menuActions = [
-    { label: 'Apariencia de la app', icon: 'palette', run: () => navigate('settings/appearance') },
+    {
+      label: 'Panel de control',
+      icon: 'gear',
+      run: () => {
+        const toggle = document.getElementById('panel-toggle');
+        if (toggle) toggle.click();
+      },
+    },
     { label: 'Cambiar contraseña', icon: 'key', run: () => navigate('change-password') },
     { label: 'Cerrar sesión', icon: 'right-from-bracket', run: () => onLogout() },
   ];

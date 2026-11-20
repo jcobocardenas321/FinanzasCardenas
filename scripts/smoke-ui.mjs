@@ -453,23 +453,30 @@ app.whenReady().then(async () => {
   }));
   await axeCheck('configuración', '#householdName');
 
-  await step('apariencia: abrir desde el menú de usuario, cambiar tema a claro y luego a oscuro con respuesta en tiempo real', () => inPage(async () => {
+  await step('panel de control: abrir desde el menú de usuario abre el cajón lateral, cambiar modo a claro y oscuro', () => inPage(async () => {
     const userBtn = document.getElementById('user-menu-btn');
     userBtn.click();
     await window.__t.sleep(80);
-    const item = [...document.querySelectorAll('[role="menuitem"]')].find((b) => b.textContent.includes('Apariencia'));
+    const item = [...document.querySelectorAll('[role="menuitem"]')].find((b) => b.textContent.includes('Panel de control'));
     item.click();
-    await window.__t.waitFor(() => location.hash === '#/settings/appearance' && document.getElementById('appearance-content'));
+    await window.__t.waitFor(() => document.getElementById('control-panel')?.classList.contains('is-open'));
 
-    const lightBtn = await window.__t.waitFor(() => document.querySelector('button[data-theme-value="light"]'));
+    const lightBtn = await window.__t.waitFor(() => document.querySelector('button[data-mode="light"]'));
     lightBtn.click();
     await window.__t.sleep(100);
-    const isLight = document.documentElement.dataset.theme === 'light' && localStorage.getItem('fc.ui.1.theme') === '"light"';
+    const isLight = document.documentElement.dataset.theme === 'light' && localStorage.getItem('fc.ui.1.mode') === '"light"';
 
-    const darkBtn = await window.__t.waitFor(() => document.querySelector('button[data-theme-value="dark"]'));
+    const darkBtn = await window.__t.waitFor(() => document.querySelector('button[data-mode="dark"]'));
     darkBtn.click();
     await window.__t.sleep(100);
-    const isDark = document.documentElement.dataset.theme === 'dark' && localStorage.getItem('fc.ui.1.theme') === '"dark"';
+    const isDark = document.documentElement.dataset.theme === 'dark' && localStorage.getItem('fc.ui.1.mode') === '"dark"';
+
+    const closeBtn = document.getElementById('cp-close');
+    closeBtn.click();
+    await window.__t.waitFor(() => !document.getElementById('control-panel')?.classList.contains('is-open'));
+
+    location.hash = '#/settings/appearance';
+    await window.__t.waitFor(() => location.hash === '#/settings/appearance' && document.getElementById('appearance-content'));
 
     return { ok: isLight && isDark, isLight, isDark };
   }));

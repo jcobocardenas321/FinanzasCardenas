@@ -329,7 +329,7 @@ function renderTabContent(tabId) {
           },
         },
       },
-        svgIcon('play'),
+        svgIcon('sparkles'),
         h('span', {}, name),
       ));
 
@@ -417,9 +417,11 @@ function renderTabContent(tabId) {
     const fontScale = prefs.get('a11y.fontScale', 100);
 
     const motionSwitch = h('label', { class: 'app-check app-check--switch' },
+      h('span', { class: 'app-check__label' }, 'Reducir movimiento'),
       h('input', {
         type: 'checkbox',
         checked: reduceMotion,
+        'aria-label': 'Reducir movimiento',
         on: {
           change: (e) => {
             prefs.set('reducedMotion', e.target.checked);
@@ -428,13 +430,14 @@ function renderTabContent(tabId) {
           },
         },
       }),
-      h('span', {}, 'Reducir movimiento'),
     );
 
     const underlineSwitch = h('label', { class: 'app-check app-check--switch' },
+      h('span', { class: 'app-check__label' }, 'Subrayar enlaces'),
       h('input', {
         type: 'checkbox',
         checked: underline,
+        'aria-label': 'Subrayar enlaces',
         on: {
           change: (e) => {
             prefs.set('a11y.underline', e.target.checked);
@@ -442,13 +445,14 @@ function renderTabContent(tabId) {
           },
         },
       }),
-      h('span', {}, 'Subrayar enlaces'),
     );
 
     const focusSwitch = h('label', { class: 'app-check app-check--switch' },
+      h('span', { class: 'app-check__label' }, 'Anillo de foco ampliado'),
       h('input', {
         type: 'checkbox',
         checked: focusRing,
+        'aria-label': 'Anillo de foco ampliado',
         on: {
           change: (e) => {
             prefs.set('a11y.focusRing', e.target.checked);
@@ -456,26 +460,35 @@ function renderTabContent(tabId) {
           },
         },
       }),
-      h('span', {}, 'Anillo de foco ampliado'),
     );
 
-    const cbSelect = h('select', {
-      class: 'app-select',
-      id: 'cp-cb',
-      on: {
-        change: (e) => {
-          prefs.set('a11y.colorBlind', e.target.value);
-          applyTheme(prefs);
-        },
-      },
-    },
-      h('option', { value: 'none', selected: colorBlind === 'none' }, 'Ninguno'),
-      h('option', { value: 'protanopia', selected: colorBlind === 'protanopia' }, 'Protanopia'),
-      h('option', { value: 'deuteranopia', selected: colorBlind === 'deuteranopia' }, 'Deuteranopia'),
-      h('option', { value: 'tritanopia', selected: colorBlind === 'tritanopia' }, 'Tritanopia'),
+    const cbModes = [
+      { id: 'none', label: 'Ninguno' },
+      { id: 'protanopia', label: 'Protanopia' },
+      { id: 'deuteranopia', label: 'Deuteranopia' },
+      { id: 'tritanopia', label: 'Tritanopia' },
+    ];
+    const cbChips = h('div', { class: 'app-cp-chips-grid', role: 'radiogroup', 'aria-label': 'Filtro de daltonismo' },
+      ...cbModes.map((m) => {
+        const isSelected = colorBlind === m.id;
+        return h('button', {
+          type: 'button',
+          class: `app-btn app-btn--sm ${isSelected ? 'app-btn--chip-active' : ''}`,
+          role: 'radio',
+          'aria-checked': String(isSelected),
+          dataset: { cbMode: m.id },
+          on: {
+            click: () => {
+              prefs.set('a11y.colorBlind', m.id);
+              applyTheme(prefs);
+              renderPanel();
+            },
+          },
+        }, m.label);
+      }),
     );
 
-    const scaleOut = h('span', { id: 'cp-scale-out' }, `${fontScale}%`);
+    const scaleOut = h('span', { id: 'cp-scale-out', class: 'app-cp-scale-badge' }, `${fontScale}%`);
     const scaleInput = h('input', {
       class: 'app-range',
       id: 'cp-scale',
@@ -483,6 +496,7 @@ function renderTabContent(tabId) {
       min: '90',
       max: '140',
       step: '5',
+      'aria-label': 'Escala del texto',
       value: String(fontScale),
       on: {
         input: (e) => {
@@ -515,11 +529,14 @@ function renderTabContent(tabId) {
         focusSwitch,
       ),
       h('div', { class: 'app-cp-section' },
-        h('label', { for: 'cp-cb' }, h('strong', {}, 'Filtro de daltonismo')),
-        cbSelect,
+        h('strong', {}, 'Filtro de daltonismo'),
+        cbChips,
       ),
       h('div', { class: 'app-cp-section' },
-        h('label', { for: 'cp-scale' }, h('strong', {}, 'Escala del texto: '), scaleOut),
+        h('div', { class: 'app-row app-row--between' },
+          h('strong', {}, 'Escala del texto'),
+          scaleOut,
+        ),
         scaleInput,
       ),
       h('div', { class: 'app-row app-row--mt' }, resetA11yBtn),
