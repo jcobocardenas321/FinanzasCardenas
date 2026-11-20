@@ -5,6 +5,8 @@ import { h } from './core/dom.js';
 import { EVENTS, emit, on } from './core/events.js';
 import { registerCommands } from './core/commands.js';
 import { createPrefs } from './core/prefs.js';
+import { applyTheme } from './core/theme.js';
+import { initControlPanel } from './core/control-panel.js';
 import { navigate, startRouter } from './core/router.js';
 import { resetSession, select, setState, subscribe } from './core/store.js';
 import { createLayouts } from './layout/layouts.js';
@@ -48,6 +50,8 @@ async function boot() {
     return;
   }
   setState('session.status', 'anonymous');
+  applyTheme(prefs());
+  initControlPanel(prefs());
   listenToasts();
   registerCommands({ navigate, toast, getUser: () => select('session.user') });
 
@@ -61,8 +65,8 @@ async function boot() {
     getUser: () => select('session.user'), getHousehold: () => select('cache.household'), createPrefs: prefs,
   });
   let stopHeartbeat = null;
-  on(EVENTS.LOGIN, () => { stopHeartbeat = startActivityHeartbeat(); });
-  on(EVENTS.LOGOUT, () => { stopHeartbeat?.(); layouts.destroy(); });
+  on(EVENTS.LOGIN, () => { stopHeartbeat = startActivityHeartbeat(); applyTheme(prefs()); initControlPanel(prefs()); });
+  on(EVENTS.LOGOUT, () => { stopHeartbeat?.(); layouts.destroy(); applyTheme(prefs()); initControlPanel(prefs()); });
   subscribe('cache.household', (name) => layouts.setHousehold(name));
 
   let expiring = false;

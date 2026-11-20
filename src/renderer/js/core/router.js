@@ -43,7 +43,8 @@ export function startRouter({ routes, layouts, getSession, getContext, onNotice,
   async function render() {
     const mine = ++token;
     const parsed = parseHash(location.hash);
-    const route = resolveRoute(routes, parsed.path) ?? resolveRoute(routes, parsed.path === '' ? 'dashboard' : 'not-found');
+    const rawPath = String(location.hash ?? '').replace(/^#\/?/, '').split('?')[0];
+    const route = resolveRoute(routes, rawPath) ?? resolveRoute(routes, parsed.path) ?? resolveRoute(routes, parsed.path === '' ? 'dashboard' : 'not-found');
     const verdict = decide({ route, session: getSession() });
     if (verdict.redirect) {
       if (verdict.notice) onNotice?.(verdict.notice);

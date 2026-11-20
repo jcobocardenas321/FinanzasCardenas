@@ -1,6 +1,6 @@
 // [B.5] LocalStorage SOLO para preferencias de UI. Lista blanca de claves: cualquier otra lanza error.
 // Nunca guarda token, datos financieros ni credenciales (la sesión vive en memoria).
-const KEY_RE = /^fc\.ui\.(\d+|anon)\.(sidebar\.(collapsed|pinned)|table\.[a-z0-9_-]+\.(pageSize|sort)|tab\.[a-z0-9_-]+|dashboard\.month)$/;
+const KEY_RE = /^fc\.ui\.(\d+|anon)\.(sidebar\.(collapsed|pinned)|table\.[a-z0-9_-]+\.(pageSize|sort)|tab\.[a-z0-9_-]+|dashboard\.month|theme|mode|geometry|geo|fontSize|reducedMotion|background|bg|anim|accentColor|language|highContrast|a11y\.[a-zA-Z0-9_-]+)$/;
 
 export function createPrefs(userId, storage = globalThis.localStorage) {
   const prefix = `fc.ui.${userId ?? 'anon'}.`;

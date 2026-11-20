@@ -746,6 +746,172 @@ textarea.input { resize: vertical; min-height: 5rem; border-radius: 18px; }
   color: var(--fc-text-muted);
 }
 
+/* ===== Controles del Panel de Apariencia ===== */
+.appearance-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fc-space-4);
+}
+.appearance-section__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.appearance-section__title {
+  margin: 0;
+  font-family: var(--fc-head);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+.appearance-section__desc {
+  margin: 0;
+  color: var(--fc-text-muted);
+  font-size: 0.95rem;
+}
+.appearance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--fc-space-4);
+  margin-top: var(--fc-space-2);
+}
+.appearance-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--fc-space-2);
+  padding: var(--fc-space-4);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fc-border-glass);
+  border-radius: 18px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.22, 0.9, 0.28, 1);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  font: inherit;
+  width: 100%;
+}
+.appearance-card:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-2px);
+}
+.appearance-card:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.appearance-card.is-selected {
+  background: linear-gradient(140deg, rgba(124, 224, 255, 0.2), rgba(74, 91, 255, 0.28));
+  border-color: var(--fc-primary);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 10px 24px -10px rgba(124, 224, 255, 0.5);
+}
+.appearance-card__icon {
+  font-size: 1.5rem;
+  color: var(--fc-primary);
+  margin-bottom: 0.25rem;
+}
+.appearance-card__title {
+  font-weight: 750;
+  font-size: 1.05rem;
+  color: #ffffff;
+}
+.appearance-card__desc {
+  font-size: 0.8125rem;
+  color: var(--fc-text-muted);
+  line-height: 1.45;
+}
+.appearance-card__badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--fc-radius-pill);
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--fc-mono);
+  background: var(--fc-primary);
+  color: var(--fc-on-primary);
+  text-transform: uppercase;
+}
+
+/* Swatches de Color */
+.color-swatch {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  margin-bottom: 0.25rem;
+}
+
+/* Toggle Switches */
+.appearance-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fc-space-4);
+  padding: var(--fc-space-4);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fc-border-glass);
+  border-radius: 18px;
+  transition: all 0.2s ease;
+}
+.appearance-switch-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.appearance-switch-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.appearance-switch-title {
+  font-weight: 750;
+  font-size: 1.05rem;
+  color: #ffffff;
+}
+.appearance-switch-desc {
+  font-size: 0.85rem;
+  color: var(--fc-text-muted);
+}
+.fc-switch {
+  position: relative;
+  width: 3.5rem;
+  height: 2rem;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid var(--fc-border-glass);
+  border-radius: var(--fc-radius-pill);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.22, 0.9, 0.28, 1);
+  flex-shrink: 0;
+  padding: 0;
+}
+.fc-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s cubic-bezier(0.22, 0.9, 0.28, 1), background-color 0.2s ease;
+}
+.fc-switch[aria-checked="true"] {
+  background: var(--fc-primary);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.fc-switch[aria-checked="true"]::after {
+  transform: translateX(1.5rem);
+  background: #0b1021;
+}
+.fc-switch:focus-visible {
+  outline: 3px solid var(--fc-focus);
+  outline-offset: 2px;
+}
+
 /* ===== SweetAlert2 Liquid Glass Skin ===== */
 .swal2-popup {
   background: rgba(20, 26, 58, 0.88) !important;

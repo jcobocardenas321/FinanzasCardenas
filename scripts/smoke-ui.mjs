@@ -43,6 +43,7 @@ app.whenReady().then(async () => {
   const step = async (name, fn) => {
     try { const r = await fn(); steps.push({ name, ok: r === true || r?.ok === true, ...(r === true ? {} : { detail: r }) }); }
     catch (error) { steps.push({ name, ok: false, detail: String(error?.message ?? error) }); }
+    console.log(`STEP [${steps.length}] ${steps.at(-1)?.ok ? 'OK' : 'FAIL'}: ${name}`);
   };
   const installHelpers = () => inPage(() => {
     window.__t = {
@@ -155,7 +156,7 @@ app.whenReady().then(async () => {
   await step('almacenamiento: solo claves fc.ui.<id>.* de la lista blanca; sessionStorage vacío; el token no está en ninguna parte', () => inPage(() => {
     const keys = Object.keys(localStorage);
     const values = keys.map((k) => localStorage.getItem(k)).join('|');
-    const re = /^fc\.ui\.\d+\.(sidebar\.(collapsed|pinned)|table\.[a-z0-9_-]+\.(pageSize|sort)|tab\.[a-z0-9_-]+|dashboard\.month)$/;
+    const re = /^fc\.ui\.\d+\.(sidebar\.(collapsed|pinned)|table\.[a-z0-9_-]+\.(pageSize|sort)|tab\.[a-z0-9_-]+|dashboard\.month|theme|mode|geometry|geo|fontSize|reducedMotion|background|bg|anim|accentColor|language|highContrast|a11y\.[a-zA-Z0-9_-]+)$/;
     return { ok: keys.length > 0 && keys.every((k) => re.test(k)) && sessionStorage.length === 0 && Boolean(window.__tok) && !values.includes(window.__tok) && !document.cookie, keys };
   }));
 
@@ -451,10 +452,53 @@ app.whenReady().then(async () => {
     return { ok: /entre 50 y 100/.test(bad) && document.querySelector('.household').textContent === 'Casa Cárdenas' && Boolean([...document.querySelectorAll('.toast--success')].find((t) => t.textContent.includes('Configuración guardada'))), bad };
   }));
   await axeCheck('configuración', '#householdName');
+
+  await step('apariencia: abrir desde el menú de usuario, cambiar tema a claro y luego a oscuro con respuesta en tiempo real', () => inPage(async () => {
+    const userBtn = document.getElementById('user-menu-btn');
+    userBtn.click();
+    await window.__t.sleep(80);
+    const item = [...document.querySelectorAll('[role="menuitem"]')].find((b) => b.textContent.includes('Apariencia'));
+    item.click();
+    await window.__t.waitFor(() => location.hash === '#/settings/appearance' && document.getElementById('appearance-content'));
+
+    const lightBtn = await window.__t.waitFor(() => document.querySelector('button[data-theme-value="light"]'));
+    lightBtn.click();
+    await window.__t.sleep(100);
+    const isLight = document.documentElement.dataset.theme === 'light' && localStorage.getItem('fc.ui.1.theme') === '"light"';
+
+    const darkBtn = await window.__t.waitFor(() => document.querySelector('button[data-theme-value="dark"]'));
+    darkBtn.click();
+    await window.__t.sleep(100);
+    const isDark = document.documentElement.dataset.theme === 'dark' && localStorage.getItem('fc.ui.1.theme') === '"dark"';
+
+    return { ok: isLight && isDark, isLight, isDark };
+  }));
+  await axeCheck('apariencia de la app', '.appearance-layout');
+
+  await step('panel de control liquid glass: el botón flotante abre el drawer, las pestañas funcionan y se cierra correctamente', () => inPage(async () => {
+    const toggle = document.getElementById('panel-toggle');
+    toggle.click();
+    await window.__t.waitFor(() => document.getElementById('control-panel')?.classList.contains('is-open'));
+    const panel = document.getElementById('control-panel');
+    const title = document.getElementById('cp-title');
+    const isVisible = panel && !panel.hidden && title && title.textContent.includes('Panel de control');
+
+    const geoTab = document.querySelector('[data-cp-tab="geometry"]');
+    if (geoTab) {
+      geoTab.click();
+      await window.__t.sleep(50);
+    }
+
+    const closeBtn = document.getElementById('cp-close');
+    closeBtn.click();
+    await window.__t.waitFor(() => !panel.classList.contains('is-open'));
+    return { ok: Boolean(isVisible && !panel.classList.contains('is-open')) };
+  }));
+
   await step('LocalStorage: solo preferencias de UI; NINGÚN dato financiero ni el token', () => inPage(() => {
     const keys = Object.keys(localStorage);
     const values = keys.map((k) => `${k}=${localStorage.getItem(k)}`).join('|');
-    const re = /^fc\.ui\.\d+\.(sidebar\.(collapsed|pinned)|table\.[a-z0-9_-]+\.(pageSize|sort)|tab\.[a-z0-9_-]+|dashboard\.month)$/;
+    const re = /^fc\.ui\.\d+\.(sidebar\.(collapsed|pinned)|table\.[a-z0-9_-]+\.(pageSize|sort)|tab\.[a-z0-9_-]+|dashboard\.month|theme|mode|geometry|geo|fontSize|reducedMotion|background|bg|anim|accentColor|language|highContrast|a11y\.[a-zA-Z0-9_-]+)$/;
     const secrets = ['Nómina', 'Arriendo', '3.000.000', '300000', 'Vacaciones', 'Mascotas', 'luis', 'Casa Cárdenas'];
     return { ok: keys.every((k) => re.test(k)) && !secrets.some((x) => values.includes(x)) && !values.includes(window.__tok) && sessionStorage.length === 0, keys };
   }));
