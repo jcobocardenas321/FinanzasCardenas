@@ -201,9 +201,10 @@ app.whenReady().then(async () => {
     const items = [...document.querySelectorAll('[role="menuitem"]')];
     const opened = btn.getAttribute('aria-expanded') === 'true' && document.activeElement === items[0];
     window.__t.key(items[0], 'ArrowDown'); const second = document.activeElement === items[1];
-    window.__t.key(items[1], 'ArrowDown'); const wrap = document.activeElement === items[0];
+    window.__t.key(items[1], 'ArrowDown'); const third = document.activeElement === items[2];
+    window.__t.key(items[2], 'ArrowDown'); const wrap = document.activeElement === items[0];
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await window.__t.sleep(60);
-    return { ok: opened && second && wrap && btn.getAttribute('aria-expanded') === 'false' && document.activeElement === btn && document.getElementById('user-menu').hidden, opened, second, wrap, expanded: btn.getAttribute('aria-expanded'), active: document.activeElement?.outerHTML.slice(0, 90), menuHidden: document.getElementById('user-menu').hidden, items: items.length };
+    return { ok: opened && second && third && wrap && btn.getAttribute('aria-expanded') === 'false' && document.activeElement === btn && document.getElementById('user-menu').hidden, opened, second, third, wrap, expanded: btn.getAttribute('aria-expanded'), active: document.activeElement?.outerHTML.slice(0, 90), menuHidden: document.getElementById('user-menu').hidden, items: items.length };
   }));
 
   // ---------- F. Móvil: cajón con foco atrapado ----------

@@ -19,5 +19,6 @@ export const ROUTES = [
   { path: 'categories', title: 'Categorías', nav: { icon: 'tags', label: 'Categorías' }, view: mod('/js/modules/categories/categories-view.js') },
   { path: 'users', title: 'Usuarios', roles: ['admin'], nav: { icon: 'users', label: 'Usuarios' }, view: mod('/js/modules/users/users-view.js') },
   { path: 'settings', title: 'Configuración', nav: { icon: 'gear', label: 'Configuración' }, view: mod('/js/modules/settings/settings-view.js') },
+  { path: 'settings/appearance', title: 'Apariencia de la app', view: mod('/js/modules/settings/appearance-view.js') },
   { path: 'not-found', title: 'Página no encontrada', view: () => import('/js/modules/shared/not-found-view.js') },
 ];

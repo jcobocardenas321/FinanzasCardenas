@@ -1,21 +1,21 @@
 /* [A.4][A.2] Estilos de diálogos nativos (<dialog>) · Liquid Glass. Sin estilos inline: compatible con CSP. */
 .fc-dialog {
-  border: 1px solid var(--fc-border-glass);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 28px;
   padding: clamp(1.5rem, 4vw, 2.25rem);
   max-width: min(34rem, calc(100vw - 2rem));
-  background: rgba(20, 26, 58, 0.94);
+  background: rgba(20, 26, 58, 0.88);
   color: #ffffff;
-  box-shadow: var(--fc-glass-specular-strong), 0 35px 80px -25px rgba(0, 0, 0, 0.85);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 35px 80px -25px rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(28px) saturate(160%);
   -webkit-backdrop-filter: blur(28px) saturate(160%);
   position: relative;
   overflow: hidden;
 }
 .fc-dialog::backdrop {
-  background: rgba(10, 14, 33, 0.68);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(10, 14, 33, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .fc-dialog__title {
   margin: 0 0 0.5rem;
