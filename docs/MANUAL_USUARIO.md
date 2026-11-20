@@ -113,7 +113,60 @@ Permite a otros miembros del hogar registrar sus ingresos y gastos:
 
 ---
 
-## 5. Atajos de Teclado y Accesibilidad
+## 5. Personalización de la Interfaz (Panel de Control Liquid Glass)
+
+FinanzasCardenas incluye un completo centro de personalización visual en tiempo real basado en el lenguaje de diseño **Liquid Glass (Apple)**. Todas las preferencias se aplican al instante y se guardan de forma persistente en tu perfil de usuario sin afectar jamás tus datos financieros.
+
+### 5.1. Cómo Abrir el Panel de Control
+Puedes abrir el cajón lateral deslizante en cualquier momento mediante cualquiera de estas dos vías:
+1. **Botón Flotante:** Haz clic en el botón con cápsula de cristal *"Panel"* ubicado en la esquina inferior derecha de la pantalla.
+2. **Menú de Usuario:** Haz clic en tu nombre en la barra superior y selecciona la opción **"Panel de control"** (con ícono de engranaje).
+
+Ambos métodos despliegan el cajón lateral (Drawer) sobre tu vista actual, permitiéndote ajustar la estética mientras observas tus balances y gráficos en vivo.
+
+### 5.2. Las 7 Pestañas de Personalización
+
+1. **Temas (12 Paletas y 4 Modos de Luz):**
+   - **12 Paletas de Color:** Variantes armónicas calculadas mediante refracción espectral matemática a intervalos de 30°: *Firma, Solar, Cítrico, Bosque, Menta, Cielo, Océano, Índigo, Violeta, Magenta, Rubí y Cobre*.
+   - **4 Modos de Iluminación:**
+     - **Claro:** Entorno cristalino diurno de alta luminosidad.
+     - **Oscuro:** Fondo nocturno espacial predeterminado (#141A3A) con acentos de luz cian y lavanda.
+     - **Alto Contraste:** Fondo negro absoluto (#000000) con bordes blancos y foco amarillo para máxima legibilidad (norma WCAG AAA).
+     - **Auto:** Se adapta automáticamente al modo claro u oscuro configurado en tu sistema operativo.
+
+2. **Geometría (12 Estilos de Bordes y Curvatura):**
+   - Modifica el radio de curvatura de todos los botones, tarjetas, modales y tablas:
+   - Opciones: *Recto (0px)*, *Sutil (4px)*, *Suave (8px)*, *Redondo (14px)*, *Curvo (20px)*, *Burbuja (28px)*, *Cápsula (999px)*, *Orgánico*, *Cortado*, *Papel*, *Bloque* y *Asimétrico*.
+
+3. **Fondos Dinámicos (12 Fondos Atmosféricos):**
+   - Elige entre 12 capas atmosféricas de fondo con refracción óptica, gradientes fluidos y texturas sutiles: *Firma, Rejilla, Puntos, Malla, Aurora boreal, Ondas, Rayas, Grano cinematográfico, Blobs, Circuito, Papel y Vitral*.
+
+4. **Animaciones de Entrada (12 Efectos de Transición):**
+   - Personaliza la fluidez y el estilo de transición de las vistas y elementos interactivos: *Fade, Subida, Lateral, Escala, Desenfoque, Rotación, Flip, Muelle, Escalonada, Pulso, Flotación y Glitch*.
+
+5. **Colores (Paleta de Acentos):**
+   - Ajusta los tonos de resplandor para botones de acción principal, enlaces, gráficos e indicadores activos: *Cian líquido, Lavanda, Esmeralda y Rosa neón*.
+
+6. **Idiomas y Región:**
+   - Configuración regional de la aplicación: predeterminado en *Español (Colombia - COP)* con formato numérico de moneda sin decimales (ej. `$ 1.200.000`) y nombres de meses en español. Incluye soporte para *English (US)*.
+
+7. **Accesibilidad Universal (WCAG 2.1 AA/AAA):**
+   - **Filtros de Daltonismo:** Botones chip de cristal para activar matrices de color SVG en tiempo real: *Ninguno, Protanopia (percepción de rojos), Deuteranopia (percepción de verdes) y Tritanopia (percepción de azules)*.
+   - **Switches de Cristal:**
+     - *Reducir movimiento:* Desactiva animaciones y transiciones continuas para personas sensibles al movimiento.
+     - *Subrayar enlaces:* Mantiene una línea visible bajo todos los enlaces para facilitar su identificación.
+     - *Anillo de foco ampliado:* Muestra un indicador de foco de 5px de alto contraste al navegar con teclado.
+   - **Slider de Escala del Texto:** Control deslizante de cristal para aumentar o reducir el tamaño tipográfico general desde el 90 % hasta el 140 %.
+
+### 5.3. Botón "Restablecer" y Modal de Confirmación
+En la parte inferior del cajón encontrarás el botón de cristal **"Restablecer"**:
+- Si deseas regresar a la apariencia original de fábrica, pulsa este botón.
+- Aparecerá un diálogo modal de confirmación (*"¿Restablecer apariencia? Se restablecerán todos los temas, geometrías y fondos al valor por defecto."*).
+- Al confirmar, la interfaz volverá instantáneamente al tema nocturno *Firma* original. **Tus transacciones, cuentas de usuario, presupuestos y metas quedan intactos al 100 %**.
+
+---
+
+## 6. Atajos de Teclado y Accesibilidad
 
 | Atajo | Acción |
 | :--- | :--- |

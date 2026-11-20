@@ -113,7 +113,7 @@ La persistencia utiliza SQLite embebido gestionado mediante migraciones versiona
 
 ## 5. Lenguaje Visual Liquid Glass (Fase 7)
 
-El sistema visual fue integrado a partir de la especificación Apple Liquid Glass:
+El sistema visual fue integrado a partir de la especificación Apple Liquid Glass (WWDC 2025):
 
 - **Tokens CSS (`src/renderer/css/tokens.css`):**
   - `--fc-bg`: `#141A3A` (Fondo noche profundo con gradientes radiales de luz líquida).
@@ -128,7 +128,59 @@ El sistema visual fue integrado a partir de la especificación Apple Liquid Glas
 
 ---
 
-## 6. Procedimientos de Testing y QA
+## 6. Sistema de Apariencia y Temas
+
+La personalización visual de la aplicación opera en tiempo real sin requerir recargas de página y está desacoplada de la lógica de negocio mediante los módulos `src/renderer/js/core/theme.js` y `src/renderer/js/core/control-panel.js`:
+
+### 6.1. Núcleo Matemático de Color (`core/theme.js`)
+- **Rotación Armónica de Matiz:** El motor implementa conversiones RGB ↔ HSL (`rgbHsl` y `hslHex`) y traslada el ángulo de matiz mediante la función `shiftHue(hex, deg)` con pasos de 30° sexagesimales para generar 12 temas armónicos de alta pureza visual:
+  1. *Firma* (0° - Cian/Azul original)
+  2. *Solar* (30° - Azul ultramar/Orquídea)
+  3. *Cítrico* (60° - Violeta cósmico/Rosa)
+  4. *Bosque* (90° - Fucsia/Salmón)
+  5. *Menta* (120° - Magenta/Naranja pastel)
+  6. *Cielo* (150° - Rojo rubí/Amarillo lima)
+  7. *Océano* (180° - Coral/Verde neón)
+  8. *Índigo* (210° - Ámbar/Esmeralda)
+  9. *Violeta* (240° - Lima/Turquesa)
+  10. *Magenta* (270° - Verde menta/Agua)
+  11. *Rubí* (300° - Esmeralda/Cian glacial)
+  12. *Cobre* (330° - Aguamarina/Lavanda)
+- **4 Modos de Iluminación:**
+  - `dark`: Modo predeterminado con fondo nocturno translúcido y paleta Liquid Glass profunda.
+  - `light`: Superficie cristalina diurna con fondo suave de alta luminosidad y contraste recalculado.
+  - `contrast`: Modo de Alto Contraste estricto (fondo `#000000`, bordes blanco puro y foco amarillo `#FFFF00`), cumpliendo WCAG 2.1 AAA.
+  - `auto`: Sincronización en vivo con las preferencias de luz del sistema operativo vía `matchMedia('(prefers-color-scheme: dark)')`.
+- **12 Estilos de Geometría (`GEO`):** Variables `--radius`, `--card-radius` y `--btn-radius` adaptadas a 12 personalidades de diseño: *Recto* (0px), *Sutil* (4px), *Suave* (8px), *Redondo* (14px), *Curvo* (20px), *Burbuja* (28px), *Cápsula* (999px), *Orgánico* (28px 10px), *Cortado* (18px 0), *Papel* (2px), *Bloque* (12px 12px 2px 2px) y *Asimétrico* (6px 30px).
+- **12 Fondos Atmosféricos Dinámicos (`BGS`):** Mallas, auroras boreales, circuitos, grano cinematográfico, vitrales y gradientes generativos aplicados al elemento `.app-bg`.
+- **12 Animaciones de Entrada (`ANIMS`):** Curvas cúbicas de aceleración fluida (`cubic-bezier(0.22, 0.9, 0.28, 1)`): *Fade, Subida, Lateral, Escala, Desenfoque, Rotación, Flip, Muelle, Escalonada, Pulso, Flotación y Glitch*.
+- **Accesibilidad y Filtros SVG:**
+  - Inyección de matrices de color SVG `<filter>` en el DOM para daltonismo (`#cb-protanopia`, `#cb-deuteranopia`, `#cb-tritanopia`).
+  - Flags de accesibilidad: `reducedMotion` (anula transiciones para usuarios sensibles), `underline` (fuerza subrayado en enlaces) y `focusRing` (anillo de foco ampliado de 5px).
+  - Escala tipográfica fluida de 90 % a 140 % mediante variable `--fc-font-scale`.
+
+### 6.2. Cajón Lateral Deslizante (`core/control-panel.js`)
+- Estructurado como un componente Offcanvas accesible WAI-ARIA (`role="dialog"`, `aria-modal="true"`, foco atrapado con `trapFocus`).
+- Unificado para abrirse tanto desde el botón flotante inferior derecho (`#panel-toggle`) como desde la opción *"Panel de control"* del menú de usuario en el header.
+- **Botón Restablecer:** Despliega un modal accesible de confirmación en `#modal-root` para reiniciar todas las variables visuales a los valores de fábrica sin comprometer ninguna información financiera.
+
+### 6.3. Mantenimiento Estricto de la CSP (Zero Inline Styles)
+Express entrega una cabecera HTTP estricta:
+```http
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;
+```
+Para evitar cualquier violación de `style-src 'self'` sin recurrir a `'unsafe-inline'`:
+1. **Sin Atributos `style=""`:** El DOM se construye enteramente con la función `h()` de `core/dom.js`. Se prohibió estrictamente la propiedad `style:` en props de elementos para no invocar `setAttribute('style')`.
+2. **Propiedades Personalizadas Vía CSSOM:** Las variables dinámicas de tema (`--bg`, `--surface`, `--accent`, `--border`) se inyectan directamente sobre el elemento raíz mediante la API segura:
+   ```javascript
+   document.documentElement.style.setProperty('--accent', set.accent);
+   ```
+3. **Clases Atómicas Predefinidas:** Los swatches y previsualizaciones de geometrías, fondos y animaciones utilizan clases atómicas CSS dedicadas en `liquid-glass.css` (ej. `.app-cp-swatch--0` a `.app-cp-swatch--11`, `.app-cp-geo-preview--0` a `--11`, `.app-cp-bg-preview--0` a `--11`).
+4. **Construcción Segura Anti-XSS:** Todo el contenido dinámico del drawer y del modal de restablecimiento se genera como nodos de texto y elementos seguros del DOM, con cero uso de `innerHTML` o `outerHTML`.
+
+---
+
+## 7. Procedimientos de Testing y QA
 
 Dentro del directorio `finanzas-cardenas/`:
 
