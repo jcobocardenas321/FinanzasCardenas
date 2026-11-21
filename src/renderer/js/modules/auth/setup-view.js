@@ -20,6 +20,7 @@ export function mount(container, { navigate }) {
   container.append(
     h('h1', { id: 'page-title', class: 'auth-title' }, 'Configuración inicial'),
     h('p', { class: 'auth-text' }, 'Crea la cuenta del Administrador del hogar. Después podrás agregar a los demás miembros.'),
+    h('p', { class: 'auth-text' }, 'Al crear la cuenta se generará una clave de recuperación única e irrepetible. Esta clave es el único medio para recuperar el acceso si olvidas tu contraseña.'),
     form);
 
   bindForm({

@@ -96,3 +96,41 @@ Para garantizar la autenticidad del archivo portable distribuido a evaluadores o
 # En Windows PowerShell para verificar el hash SHA-256
 Get-FileHash -Path "dist\FinanzasCardenas 0.1.0.exe" -Algorithm SHA256
 ```
+
+---
+
+## 7. Solución de Problemas (Troubleshooting)
+
+A continuación se detallan los escenarios más comunes de soporte y sus soluciones operativas:
+
+### 7.1. Base de Datos Bloqueada (`SQLITE_BUSY` o `database is locked`)
+- **Causa:** Ocurre si una instancia previa de la aplicación no se cerró completamente o si un software de respaldo en segundo plano (ej. OneDrive, Google Drive o Dropbox) mantiene bloqueado el archivo `finanzas.db`.
+- **Solución:**
+  1. Cierra todos los procesos de `FinanzasCardenas` desde el Administrador de Tareas (Windows) o mediante terminal:
+     ```bash
+     pkill -f "FinanzasCardenas" || killall electron
+     ```
+  2. Verifica que el archivo `finanzas.db` en la carpeta `userData` no esté marcado como "Sólo lectura".
+  3. Si la carpeta está sincronizada en la nube, desactiva la sincronización en tiempo real sobre la ruta `userData/data/` para evitar conflictos con el modo WAL (Write-Ahead Logging) de SQLite.
+
+### 7.2. Puerto Local o Enlace de Red Bloqueado
+- **Causa:** El backend interno de Express se enlaza exclusivamente al adaptador local `127.0.0.1` en un puerto dinámico efímero. Si una directiva de seguridad del sistema o firewall bloquea el enlace loopback, la ventana del renderer no podrá comunicarse con la API.
+- **Solución:**
+  1. Comprueba que el firewall local permita conexiones salientes y entrantes en la interfaz de loopback (`localhost` / `127.0.0.1`).
+  2. La aplicación nunca expone puertos a redes externas (`0.0.0.0`), garantizando aislamiento total.
+
+### 7.3. Errores de Certificados y CSP (Content Security Policy)
+- **Causa:** Mensajes en la consola de depuración como `Refused to load the script/style because it violates the following Content Security Policy directive`.
+- **Solución:**
+  1. FinanzasCardenas utiliza una política de seguridad estricta: `default-src 'self'` sin `'unsafe-inline'`. Todos los scripts y estilos deben residir en el paquete empaquetado.
+  2. Si se compila desde el código fuente y faltan iconos o fuentes, asegúrate de haber ejecutado previamente `npm run vendor` para volcar todas las tipografías locales (`Inter`, `Outfit`, `JetBrains Mono`) y librerías (`SweetAlert2`, `FontAwesome`).
+  3. No se requiere conexión a internet para cargar tipografías ni recursos CDN.
+
+### 7.4. Olvido de Contraseña y Recuperación de la Cuenta Administrador
+- **Causa:** El usuario Administrador olvidó sus credenciales de acceso.
+- **Solución:**
+  1. En la pantalla de inicio de sesión, haz clic en **"¿Olvidaste tu contraseña?"**.
+  2. Ingresa el nombre de usuario del Administrador y la **Clave de Recuperación** única obtenida en el primer inicio (guardada en `userData/rec/recovery-key.txt` o anotada de forma segura).
+  3. Define una nueva contraseña maestra que cumpla las políticas de complejidad (mínimo 10 caracteres, mayúscula, minúscula, número y símbolo).
+  4. La clave de recuperación utilizada quedará invalidada inmediatamente y el sistema generará una nueva clave única e irrepetible que deberás almacenar.
+

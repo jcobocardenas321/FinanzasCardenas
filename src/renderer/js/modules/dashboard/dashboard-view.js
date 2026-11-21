@@ -21,7 +21,9 @@ export function mount(container, { api, navigate }) {
 
   function render(k, series, pie) {
     if (k.totalIncomeCop === 0 && k.totalExpenseCop === 0) {
-      body.replaceChildren(emptyState({ icon: 'wallet', title: 'Aún no tienes movimientos', text: 'Registra tu primer ingreso para empezar a ver tu balance y tu ahorro mensual.', actionLabel: 'Agrega tu primer ingreso', onAction: () => navigate('transactions/income') }));
+      const es = emptyState({ icon: 'wallet', title: 'Aún no tienes movimientos', text: 'Registra tu primer ingreso para empezar a ver tu balance y tu ahorro mensual.', actionLabel: 'Agrega tu primer ingreso', onAction: () => navigate('transactions/income') });
+      es.append(h('p', { class: 'empty-state__text' }, 'Una vez agregues tu primera transacción, verás tus gráficos aquí.'));
+      body.replaceChildren(es);
       return;
     }
     const last6 = series.points.slice(-6);

@@ -34,6 +34,28 @@ test('scrypt: verifica hashes creados con otros parámetros (los lee del propio 
 
 test('scrypt: verifyDummy siempre devuelve false', async () => assert.equal(await hasher.verifyDummy('lo-que-sea'), false));
 
+test('scrypt: usa parámetros seguros por defecto (N=32768, r=8, p=1, keyLen=64) y tiempo de verificación adecuado', async () => {
+  const prodHasher = createScryptHasher();
+  const pwd = 'Clave-Segura-2026!';
+  const h = await prodHasher.hash(pwd);
+  const parts = h.split('$');
+  assert.equal(parts[0], 'scrypt');
+  assert.equal(parts[1], '32768');
+  assert.equal(parts[2], '8');
+  assert.equal(parts[3], '1');
+  const salt = Buffer.from(parts[4], 'base64');
+  const key = Buffer.from(parts[5], 'base64');
+  assert.equal(salt.length, 16, 'la sal debe tener 16 bytes');
+  assert.equal(key.length, 64, 'la clave derivada debe tener 64 bytes');
+
+  const start = performance.now();
+  const ok = await prodHasher.verify(pwd, h);
+  const duration = performance.now() - start;
+  assert.equal(ok, true);
+  assert.ok(duration >= 5, `la verificación scrypt debe requerir trabajo de CPU (fue ${duration.toFixed(1)} ms)`);
+  assert.ok(duration < 2000, `la verificación no debe demorar más de 2000 ms (fue ${duration.toFixed(1)} ms)`);
+});
+
 test('tokens: únicos, opacos y con id = SHA-256 estable', () => {
   const t = createTokenService();
   const a = t.generate();
